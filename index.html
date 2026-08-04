@@ -59,56 +59,6 @@
       gap: 6px;
     }
 
-    /* Estilos para las ubicaciones */
-    .ubicaciones-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .ubi-chip {
-      cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .ubi-chip input {
-      display: none;
-    }
-
-    .ubi-chip span {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1.5px solid #efefef;
-      background: #fdfdfd;
-      font-size: 14px;
-      font-weight: 500;
-      color: #444;
-      transition: all 0.2s ease;
-    }
-
-    .ubi-chip span small {
-      font-size: 11px;
-      color: #999;
-      background: #eee;
-      padding: 2px 6px;
-      border-radius: 6px;
-    }
-
-    .ubi-chip input:checked + span {
-      background: #1a1a1a;
-      color: #fff;
-      border-color: #1a1a1a;
-    }
-
-    .ubi-chip input:checked + span small {
-      background: #333;
-      color: #ddd;
-    }
-
     /* Estilos para los contadores */
     .btn-step {
       width: 44px;
@@ -149,6 +99,32 @@
     .num-input::-webkit-outer-spin-button,
     .num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .num-input:focus { outline: none; border-color: #bbb; }
+
+    /* Lista informativa de ubicaciones */
+    .red-info {
+      background: #f9f8f6;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 1.6rem;
+      border: 1px solid #eae8e2;
+    }
+
+    .red-info-titulo {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .red-lista {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      list-style-type: disc;
+      padding-left: 18px;
+    }
 
     .divider {
       border: none;
@@ -205,7 +181,6 @@
 
     .btn-cta:hover { background: #eee; }
     .btn-cta:active { transform: scale(0.98); }
-    .btn-cta:disabled { background: #555; color: #888; cursor: not-allowed; }
 
     @media (max-width: 440px) {
       .card { padding: 2rem 1.25rem; }
@@ -221,53 +196,19 @@
       <h1>Presupuestá tu pauta</h1>
     </div>
 
+    <!-- Campo Pantallas Totales (Máximo 15) -->
     <div class="campo">
-      <label class="titulo-campo">Seleccioná los puntos de exhibición</label>
-      <div class="ubicaciones-grid" id="contenedor-ubicaciones">
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="El Punto San Lorenzo Chico - 1" onchange="calcular()" checked>
-          <span>El Punto San Lorenzo Chico - 1</span>
-        </label>
-        
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="El Punto San Lorenzo Chico - 2" onchange="calcular()">
-          <span>El Punto San Lorenzo Chico - 2</span>
-        </label>
-        
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="Galería La Continental" onchange="calcular()" checked>
-          <span>Galería La Continental</span>
-        </label>
-        
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="Galería El Palacio - 1" onchange="calcular()">
-          <span>Galería El Palacio - 1</span>
-        </label>
-        
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="Galería El Palacio - 2" onchange="calcular()">
-          <span>Galería El Palacio - 2</span>
-        </label>
-        
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="Galería Buenos Aires" onchange="calcular()">
-          <span>Galería Buenos Aires</span>
-        </label>
-
-        <label class="ubi-chip">
-          <input type="checkbox" value="1" data-name="Universidad Católica de Salta" onchange="calcular()">
-          <span>Universidad Católica de Salta</span>
-        </label>
-
-        <label class="ubi-chip">
-          <input type="checkbox" value="0.5" data-name="Galería Margalef (1 Pantalla)" onchange="calcular()">
-          <span>Galería Margalef <small>1 Pantalla</small></span>
-        </label>
+      <label class="titulo-campo">Cantidad de pantallas en la red (Máx. 15)</label>
+      <div class="campo-row">
+        <button class="btn-step" type="button" onclick="cambiar('pantallas', -1)">-</button>
+        <input class="num-input" type="number" id="val-pantallas" value="3" min="1" max="15" oninput="calcular()" onblur="validar('pantallas')">
+        <button class="btn-step" type="button" onclick="cambiar('pantallas', 1)">+</button>
       </div>
     </div>
 
+    <!-- Campo Pases por Pantalla -->
     <div class="campo">
-      <label class="titulo-campo">Pases por día (15 seg. c/u)</label>
+      <label class="titulo-campo">Pases por pantalla por día (15 seg. c/u)</label>
       <div class="campo-row">
         <button class="btn-step" type="button" onclick="cambiar('pases', -50)">-</button>
         <input class="num-input" type="number" id="val-pases" value="200" min="50" step="50" oninput="calcular()" onblur="validar('pases')">
@@ -275,6 +216,7 @@
       </div>
     </div>
 
+    <!-- Campo Días -->
     <div class="campo">
       <label class="titulo-campo">Días de pauta contratados</label>
       <div class="campo-row">
@@ -284,13 +226,26 @@
       </div>
     </div>
 
+    <!-- Red de ubicaciones informativa -->
+    <div class="red-info">
+      <div class="red-info-titulo">Red de ubicaciones disponibles:</div>
+      <ul class="red-lista">
+        <li>El Punto San Lorenzo Chico</li>
+        <li>Galería La Continental</li>
+        <li>Galería El Palacio</li>
+        <li>Galería Buenos Aires</li>
+        <li>Universidad Católica de Salta</li>
+        <li>Galería Margalef</li>
+      </ul>
+    </div>
+
     <hr class="divider">
 
     <div class="total-card">
       <div class="total-label">Inversión estimada</div>
       <div class="total-valor" id="res-total">$ 0</div>
       <div class="total-detalle" id="res-detalle">Cargando estimación...</div>
-      <button class="btn-cta" id="btn-whatsapp" type="button" onclick="enviarWhatsApp()">Reservar estas ubicaciones</button>
+      <button class="btn-cta" id="btn-whatsapp" type="button" onclick="enviarWhatsApp()">Reservar esta campaña</button>
     </div>
   </div>
 
@@ -300,7 +255,10 @@
       if(!input) return 1;
       var v = parseInt(input.value, 10);
       var min = parseInt(input.getAttribute('min'), 10) || 1;
-      return (isNaN(v) || v < min) ? min : v;
+      var max = parseInt(input.getAttribute('max'), 10) || 9999;
+      if (isNaN(v) || v < min) return min;
+      if (v > max) return max;
+      return v;
     }
 
     function cambiar(campo, delta) {
@@ -308,7 +266,11 @@
       if(!input) return;
       var nuevoValor = get(campo) + delta;
       var min = parseInt(input.getAttribute('min'), 10) || 1;
+      var max = parseInt(input.getAttribute('max'), 10) || 9999;
+      
       if (nuevoValor < min) nuevoValor = min;
+      if (nuevoValor > max) nuevoValor = max;
+      
       input.value = nuevoValor;
       calcular();
     }
@@ -317,39 +279,23 @@
       var input = document.getElementById('val-' + campo);
       if(!input) return;
       var min = parseInt(input.getAttribute('min'), 10) || 1;
+      var max = parseInt(input.getAttribute('max'), 10) || 9999;
       var v = parseInt(input.value, 10);
+      
       if (isNaN(v) || v < min) v = min;
+      if (v > max) v = max;
+      
       input.value = v;
       calcular();
     }
 
     function calcular() {
+      var pantallas = get('pantallas');
       var pases = get('pases');
       var dias = get('dias');
       
-      var checkboxes = document.querySelectorAll('.ubi-chip input:checked');
-      var btnWhatsapp = document.getElementById('btn-whatsapp');
-      
-      var totemsEquivalentes = 0;
-      var locacionesCount = checkboxes.length;
-
-      checkboxes.forEach(function(cb) {
-        totemsEquivalentes += parseFloat(cb.value);
-      });
-
-      if (locacionesCount === 0) {
-        document.getElementById('res-total').textContent = '$ 0 + IVA';
-        document.getElementById('res-detalle').textContent = 'Por favor, seleccioná al menos una ubicación.';
-        btnWhatsapp.disabled = true;
-        btnWhatsapp.textContent = 'Seleccioná una ubicación';
-        return;
-      } else {
-        btnWhatsapp.disabled = false;
-        btnWhatsapp.textContent = 'Reservar estas ubicaciones';
-      }
-
       // LÓGICA DE PRECIOS ESCALONADOS
-      var precioBase = 39.775; // Precio óptimo (25 días o más)
+      var precioBase = 32.5; // Precio óptimo (25 días o más)
       var precioActual = precioBase;
 
       if (dias >= 1 && dias <= 6) {
@@ -362,7 +308,7 @@
         precioActual = precioBase; // Sin recargo
       }
 
-      var pasesTotalesDia = totemsEquivalentes * pases;
+      var pasesTotalesDia = pantallas * pases;
       var total = precioActual * pasesTotalesDia * dias;
       
       var fmt = new Intl.NumberFormat('es-AR', {
@@ -374,27 +320,20 @@
       
       document.getElementById('res-total').textContent = fmt.format(total) + ' + IVA';
       
-      var txtPuntos = locacionesCount === 1 ? '1 punto de exhibición' : locacionesCount + ' puntos de exhibición';
+      var txtPantallas = pantallas === 1 ? '1 pantalla' : pantallas + ' pantallas';
       var txtDias = dias === 1 ? '1 día' : dias + ' días';
       
-      document.getElementById('res-detalle').textContent = 'Incluye: ' + txtPuntos + ' en simultáneo. Totalizando ' + pasesTotalesDia + ' pases de 15 seg. por día durante ' + txtDias + '.';
+      document.getElementById('res-detalle').textContent = 'Incluye cobertura en ' + txtPantallas + '. Totalizando ' + pasesTotalesDia + ' pases de 15 seg. por día (' + pases + ' en cada pantalla) durante ' + txtDias + '.';
     }
 
     function enviarWhatsApp() {
+      var pantallas = get('pantallas');
       var pases = get('pases');
       var dias = get('dias');
       var elTotal = document.getElementById('res-total');
       var totalText = elTotal ? elTotal.textContent : '$ 0';
       
-      var checkboxes = document.querySelectorAll('.ubi-chip input:checked');
-      var nombresUbicaciones = [];
-      checkboxes.forEach(function(cb) {
-        nombresUbicaciones.push("- " + cb.getAttribute('data-name'));
-      });
-      
-      var listaTexto = nombresUbicaciones.join('\n');
-      
-      var mensaje = 'Hola! Estuve usando el simulador web y quiero consultar disponibilidad para una campaña de ' + pases + ' pases diarios (base tótem) por ' + dias + ' días.\n\n*Ubicaciones seleccionadas:*\n' + listaTexto + '\n\n*(Presupuesto estimado: ' + totalText + ')*';
+      var mensaje = 'Hola! Estuve usando el simulador web y quiero consultar disponibilidad para una campaña en ' + pantallas + ' pantallas con ' + pases + ' pases diarios por pantalla durante ' + dias + ' días.\n\n*(Presupuesto estimado: ' + totalText + ')*';
       
       var telefono = "5493876022170";
       window.open('https://wa.me/' + telefono + '?text=' + encodeURIComponent(mensaje), '_blank');
