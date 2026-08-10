@@ -59,6 +59,37 @@
       gap: 6px;
     }
 
+    /* Selector de Tipo de Pase (Segmented Control) */
+    .segmented-control {
+      display: flex;
+      background: #f5f4f0;
+      border-radius: 12px;
+      padding: 4px;
+      gap: 4px;
+    }
+    
+    .segmented-control input {
+      display: none;
+    }
+    
+    .segmented-control label {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .segmented-control input:checked + label {
+      background: #fff;
+      color: #1a1a1a;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+    }
+
     /* Estilos para los contadores */
     .btn-step {
       width: 44px;
@@ -195,6 +226,18 @@
       <p>Simulador Web</p>
       <h1>Presupuestá tu pauta</h1>
     </div>
+    
+    <!-- Selector Tipo de Pase -->
+    <div class="campo">
+      <label class="titulo-campo">Tipo de Pase</label>
+      <div class="segmented-control">
+        <input type="radio" id="dinamico" name="tipoPase" value="dinamico" checked onchange="calcular()">
+        <label for="dinamico">Dinámico (15 seg)</label>
+        
+        <input type="radio" id="estatico" name="tipoPase" value="estatico" onchange="calcular()">
+        <label for="estatico">Estático (10 seg)</label>
+      </div>
+    </div>
 
     <!-- Campo Pantallas Totales (Máximo 15) -->
     <div class="campo">
@@ -208,7 +251,7 @@
 
     <!-- Campo Pases por Pantalla -->
     <div class="campo">
-      <label class="titulo-campo">Pases por pantalla por día (15 seg. c/u)</label>
+      <label class="titulo-campo">Pases por pantalla por día</label>
       <div class="campo-row">
         <button class="btn-step" type="button" onclick="cambiar('pases', -25)">-</button>
         <input class="num-input" type="number" id="val-pases" value="100" min="25" step="25" oninput="calcular()" onblur="validar('pases')">
@@ -294,16 +337,20 @@
       var pases = get('pases');
       var dias = get('dias');
       
+      // Obtener el tipo de pase seleccionado
+      var tipoPase = document.querySelector('input[name="tipoPase"]:checked').value;
+      var precioBase = tipoPase === 'dinamico' ? 27.6 : 23.9;
+      var segundosPase = tipoPase === 'dinamico' ? 15 : 10;
+      
       // LÓGICA DE PRECIOS ESCALONADOS
-      var precioBase = 39.775; // Precio óptimo (25 días o más)
       var precioActual = precioBase;
 
       if (dias >= 1 && dias <= 6) {
-        precioActual = precioBase * 1.05; // 15% más
+        precioActual = precioBase * 1.15; // 15% más
       } else if (dias >= 7 && dias <= 14) {
-        precioActual = precioBase * 1.0; // 10% más
+        precioActual = precioBase * 1.10; // 10% más
       } else if (dias >= 15 && dias <= 24) {
-        precioActual = precioBase * 1.0; // 5% más
+        precioActual = precioBase * 1.05; // 5% más
       } else if (dias >= 25) {
         precioActual = precioBase; // Sin recargo
       }
@@ -323,7 +370,7 @@
       var txtPantallas = pantallas === 1 ? '1 pantalla' : pantallas + ' pantallas';
       var txtDias = dias === 1 ? '1 día' : dias + ' días';
       
-      document.getElementById('res-detalle').textContent = 'Incluye cobertura en ' + txtPantallas + '. Totalizando ' + pasesTotalesDia + ' pases de 15 seg. por día (' + pases + ' en cada pantalla) durante ' + txtDias + '.';
+      document.getElementById('res-detalle').textContent = 'Incluye cobertura en ' + txtPantallas + '. Totalizando ' + pasesTotalesDia + ' pases de ' + segundosPase + ' seg. por día (' + pases + ' en cada pantalla) durante ' + txtDias + '.';
     }
 
     function enviarWhatsApp() {
@@ -333,7 +380,10 @@
       var elTotal = document.getElementById('res-total');
       var totalText = elTotal ? elTotal.textContent : '$ 0';
       
-      var mensaje = 'Hola! Estuve usando el simulador web y quiero consultar disponibilidad para una campaña en ' + pantallas + ' pantallas con ' + pases + ' pases diarios por pantalla durante ' + dias + ' días.\n\n*(Presupuesto estimado: ' + totalText + ')*';
+      var tipoPase = document.querySelector('input[name="tipoPase"]:checked').value;
+      var tipoStr = tipoPase === 'dinamico' ? 'Dinámicos (15s)' : 'Estáticos (10s)';
+      
+      var mensaje = 'Hola! Estuve usando el simulador web y quiero consultar disponibilidad para una campaña en ' + pantallas + ' pantallas con ' + pases + ' pases ' + tipoStr + ' diarios por pantalla durante ' + dias + ' días.\n\n*(Presupuesto estimado: ' + totalText + ')*';
       
       var telefono = "5493876022170";
       window.open('https://wa.me/' + telefono + '?text=' + encodeURIComponent(mensaje), '_blank');
